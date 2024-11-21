@@ -1,6 +1,6 @@
-import { DashboardOverview } from '@/components/dashboard-overview'
-import { TaskList } from '@/components/task-list'
-import { EmployeeManagement } from '@/components/employee-management'
+import { TaskList } from "@/components/dashboard/task-list";
+import { DashboardOverview } from "@/components/dashboard/overview";
+import { EmployeeManagement } from "@/components/management";
 
 export default function Home() {
   return (
@@ -12,6 +12,5 @@ export default function Home() {
       <DashboardOverview />
       <TaskList />
     </div>
-  )
+  );
 }
-

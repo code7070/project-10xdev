@@ -18,7 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { TaskForm } from "@/components/task-form";
+import { TaskForm } from "@/components/dashboard/task-form";
 import { projects, tasks } from "@/lib/data";
 import {
   Accordion,
