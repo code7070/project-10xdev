@@ -18,14 +18,16 @@ export default function CardOverview({
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold">{totalTasks}</div>
-        <div className="text-xs text-muted-foreground">
-          {tasks.length > 0 &&
-            tasks
-              .slice(0, taskLimit)
-              .map((i, n) => <div key={n}>{i.title}</div>)}
-          {tasks.length > taskLimit && (
-            <div>+{tasks.length - taskLimit} more</div>
-          )}
+        <div className="text-sm text-muted-foreground">
+          <ul className="list-disc list-inside">
+            {tasks.length > 0 &&
+              tasks
+                .slice(0, taskLimit)
+                .map((i, n) => <li key={n}>{i.title}</li>)}
+            {tasks.length > taskLimit && (
+              <li className="">+{tasks.length - taskLimit} more</li>
+            )}
+          </ul>
         </div>
       </CardContent>
     </Card>

@@ -27,8 +27,9 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Progress } from "@/components/ui/progress";
-import { CheckCircle2, Circle, Clock } from "lucide-react";
+import { CheckCircle2, Circle, Clock, ExternalLink } from "lucide-react";
 import { TTask, TTaskByProject, TTaskStatus } from "@/lib/types";
+import Link from "next/link";
 
 export function TaskList() {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -97,6 +98,12 @@ export function TaskList() {
                   <span className="text-sm text-muted-foreground">
                     {project.completedTasks} / {project.totalTasks}
                   </span>
+                  <Button asChild variant="outline" size="sm">
+                    <Link href={`/project/${project.id}`}>
+                      <ExternalLink className="size-4 mr-2" />
+                      Details
+                    </Link>
+                  </Button>
                 </div>
               </div>
             </AccordionTrigger>
