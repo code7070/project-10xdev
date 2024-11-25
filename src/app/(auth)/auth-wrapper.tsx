@@ -17,8 +17,8 @@ export default function AuthWrapper({
       </div>
     );
   return (
-    <AuthContext.Provider value={data}>
-      {data?.status === 200 ? children : <Login mutate={mutate} />}
+    <AuthContext.Provider value={{ ...data?.data, isLoading, mutate }}>
+      {token ? children : <Login mutate={mutate} />}
     </AuthContext.Provider>
   );
 }

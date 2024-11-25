@@ -1,5 +1,6 @@
 .navside {
   @apply hidden lg:block lg:w-[248px] h-screen bg-gray-700 rounded-r-app-radius text-gray-100 relative;
+  @apply sticky top-0;
 
   &::after {
     content: "";

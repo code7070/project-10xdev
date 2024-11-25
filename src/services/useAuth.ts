@@ -5,21 +5,30 @@ import useSWR, { KeyedMutator } from "swr";
 import { FetchService } from "./fetcher";
 
 export interface IUserData {
-  status: number;
   name?: string;
   photo?: string;
   id?: number;
+}
+
+export interface IResponse {
+  status: number;
+  data: IUserData;
 }
 
 export type mutateUserData = KeyedMutator<IUserData>;
 
 interface IUseAuth {
   isLoading: boolean;
-  data: IUserData;
+  data: IResponse;
   mutate: mutateUserData;
 }
 
-export const AuthContext = createContext({} as IUserData);
+interface IContext extends IUserData {
+  isLoading: boolean;
+  mutate: mutateUserData;
+}
+
+export const AuthContext = createContext({} as IContext);
 
 const fetch = new FetchService();
 

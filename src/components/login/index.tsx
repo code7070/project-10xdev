@@ -3,6 +3,7 @@
 import { AuthService } from "@/services/auth.service";
 import { mutateUserData } from "@/services/useAuth";
 import { ArrowUpRight, Loader } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const authService = new AuthService();
@@ -12,11 +13,14 @@ export default function Login({ mutate }: { mutate?: mutateUserData }) {
   const [see, setSee] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const router = useRouter();
+
   async function login(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     await authService.login(e);
     if (mutate) mutate();
+    router.refresh();
     setLoading(false);
   }
 
@@ -41,7 +45,7 @@ export default function Login({ mutate }: { mutate?: mutateUserData }) {
             type="text"
             name="name"
             placeholder="Name"
-            defaultValue="jojo"
+            defaultValue="jojo ganteng"
           />
           <input
             type="password"

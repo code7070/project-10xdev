@@ -25,10 +25,12 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  nav,
+  navigation,
+  profileBadge,
 }: Readonly<{
-  nav: React.ReactNode;
   children: React.ReactNode;
+  navigation: React.ReactNode;
+  profileBadge: React.ReactNode;
 }>) {
   const cookie = await cookies();
   return (
@@ -38,8 +40,11 @@ export default async function RootLayout({
       >
         <AuthWrapper token={cookie.get("pms-token")?.value || ""}>
           <div className="flex">
-            {nav}
-            <div className="flex-1">{children}</div>
+            {navigation}
+            <div className="flex-1 flex flex-col gap-6">
+              {profileBadge}
+              {children}
+            </div>
           </div>
         </AuthWrapper>
         <Toaster

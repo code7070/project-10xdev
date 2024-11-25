@@ -28,8 +28,8 @@ input[type="password"] {
 }
 
 button {
-  @apply w-full flex gap-2 items-center justify-center rounded-app-radius border-2 border-transparent px-4 py-3 font-bold text-base uppercase;
-  @apply transition-all focus:scale-90;
+  @apply w-full flex gap-2 items-center justify-center rounded-app-radius border-2 border-transparent px-4 py-3 font-bold text-base;
+  @apply transition-all active:scale-90;
 }
 
 button.btn-primary {
@@ -46,4 +46,12 @@ button.btn-accent {
 
 button.btn-ghost {
   @apply text-gray-100 bg-transparent hover:bg-gray-100 hover:text-app-orange;
+}
+
+button.btn-danger {
+  @apply bg-red-600 text-gray-100 hover:bg-red-500;
+}
+
+button.btn-danger-outline {
+  @apply text-red-500 border-red-500;
 }
