@@ -1,0 +1,28 @@
+### GET Root routes
+GET http://localhost:3000/api/v1
+
+### GET User routes
+POST http://localhost:3000/api/v1/user/get
+Content-Type: application/json
+
+{
+  "token": "d46e65da-78a9-430d-98cb-5d61b86d1430"
+}
+
+### Login User Routes
+POST http://localhost:3000/api/v1/user/login
+Content-Type: application/json
+
+{
+  "name":"jojo",
+  "password":"Abcd.987"
+}
+
+### Create User Routes
+POST http://localhost:3000/api/v1/user
+Content-Type: application/json
+
+{
+  "name":"Syalala",
+  "password":"login123"
+}

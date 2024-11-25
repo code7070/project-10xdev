@@ -1,0 +1,49 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+  /* color: var(--foreground); */
+  /* background: var(--background); */
+  /* font-family: Arial, Helvetica, sans-serif; */
+  @apply font-primary bg-gray-100 text-black;
+}
+
+input[type="text"],
+input[type="password"] {
+  @apply font-medium rounded-app-radius p-3 text-base text-gray-800 outline-none bg-white transition-all;
+  @apply border ring-offset-white focus-visible:ring-2 focus-visible:ring-offset-1 focus-visible:ring-app-orange focus-visible:ring-offset-app-orange;
+}
+
+button {
+  @apply w-full flex gap-2 items-center justify-center rounded-app-radius border-2 border-transparent px-4 py-3 font-bold text-base uppercase;
+  @apply transition-all focus:scale-90;
+}
+
+button.btn-primary {
+  @apply bg-app-orange text-gray-100;
+}
+
+button.btn-secondary {
+  @apply bg-gray-100 border-app-orange text-app-orange;
+}
+
+button.btn-accent {
+  @apply bg-app-green text-gray-100;
+}
+
+button.btn-ghost {
+  @apply text-gray-100 bg-transparent hover:bg-gray-100 hover:text-app-orange;
+}
