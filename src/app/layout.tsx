@@ -39,13 +39,13 @@ export default async function RootLayout({
         className={`${fontPrimary.variable} ${fontSecondary.variable} antialiased`}
       >
         <AuthWrapper token={cookie.get("pms-token")?.value || ""}>
-          <div className="flex">
+          <main className="flex">
             {navigation}
             <div className="flex-1 flex flex-col gap-6">
               {profileBadge}
               {children}
             </div>
-          </div>
+          </main>
         </AuthWrapper>
         <Toaster
           toastOptions={{

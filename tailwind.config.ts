@@ -16,6 +16,7 @@ export default {
         "app-green": "#2C838C",
         "gray-100": "#F3F4F6",
         "app-red-500": "#EF4444",
+        "app-yellow": "#FFCE22",
       },
       fontFamily: {
         primary: "var(--font-primary)",

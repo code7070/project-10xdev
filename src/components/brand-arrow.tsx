@@ -5,6 +5,10 @@ const sizeSet = {
     arrow: "14px",
     circle: "22px",
   },
+  md: {
+    arrow: "24px",
+    circle: "32px",
+  },
   lg: {
     arrow: "32px",
     circle: "40px",
