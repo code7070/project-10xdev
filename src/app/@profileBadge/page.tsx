@@ -6,9 +6,14 @@ import style from "@/styles/profile-badge.module.scss";
 import { Loader } from "lucide-react";
 import { AnimatePresence, motion, Variants } from "framer-motion";
 import { logoutService } from "@/services/logout.actions";
+import { DashboardService } from "@/services/dashboard.service";
+
+const service = new DashboardService();
 
 export default function ProfileBadge() {
-  const { name, photo, isLoading, mutate } = useContext(AuthContext);
+  const { name, photo, isLoading, mutate, id } = useContext(AuthContext);
+
+  const dummy = service.dummyProfile();
 
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -40,6 +45,17 @@ export default function ProfileBadge() {
     });
   }
 
+  let display = {
+    name: dummy.name,
+    photo: dummy.photo,
+  };
+
+  if (id)
+    display = {
+      name: name!,
+      photo: photo!,
+    };
+
   return (
     <div className={style.wrapper}>
       <div className={style.inner}>
@@ -48,12 +64,18 @@ export default function ProfileBadge() {
           animate={{ scale: 1, opacity: 100 }}
         >
           <button type="button" className={style.profileBadge} onClick={toggle}>
-            <div>{isLoading ? "" : name?.split(" ").slice(0, 2).join(" ")}</div>
+            <div>
+              {isLoading ? "" : display.name?.split(" ").slice(0, 2).join(" ")}
+            </div>
             <div className={style.photo}>
               {isLoading ? (
                 <Loader className="size-4 animate-spin" />
               ) : (
-                <img alt={name} title={name} src={photo} />
+                <img
+                  alt={display.name}
+                  title={display.name}
+                  src={display.photo}
+                />
               )}
             </div>
           </button>

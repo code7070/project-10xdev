@@ -21,7 +21,7 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-6 w-full pb-20">
-      <DashboardGreeting name={name!} />
+      <DashboardGreeting name={name || "Ganteng"} />
       <DashboardSearch />
       <motion.div
         variants={{

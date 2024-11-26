@@ -22,7 +22,7 @@ export class FetchService {
   async POST(
     endpoint: string,
     body?: { [key: string]: any },
-    isFormData: boolean = false
+    isFormData: boolean = false,
   ) {
     // payload declare
     let bodyPayload: string | FormData = JSON.stringify(body);

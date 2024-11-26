@@ -11,7 +11,7 @@ export default function DashboardUpcoming() {
 
   return (
     <div
-      className="relative w-full rounded-app-radius bg-app-green text-white py-8 px-6 flex flex-col gap-4"
+      className="relative size-full rounded-app-radius bg-app-green text-white py-8 px-6 flex flex-col gap-4"
       style={{
         backgroundImage: "url(/pattern-green-box.png)",
         backgroundPosition: "bottom left",
@@ -31,7 +31,7 @@ export default function DashboardUpcoming() {
         {meeting.map((i, n) => (
           <div
             key={n}
-            className="bg-white/10 rounded-app-radius py-3 px-4 flex gap-2.5"
+            className="bg-white/10 border border-transparent rounded-app-radius py-3 px-4 flex gap-2.5 hover:bg-white/20 hover:border-white"
           >
             <div className="flex-1">
               <div className="font-secondary line-clamp-2">{i.name}</div>

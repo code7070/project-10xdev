@@ -1,7 +1,10 @@
 import { addDays, addHours, eachDayOfInterval, subDays } from "date-fns";
+import { FetchService } from "./fetcher";
 
 export class DashboardService {
   constructor() {}
+
+  private fetch = new FetchService();
 
   dummyMeetingList() {
     return [
@@ -154,5 +157,12 @@ export class DashboardService {
 
   getRangeDate(start = subDays(new Date(), 8), end = new Date()) {
     return eachDayOfInterval({ start, end });
+  }
+
+  dummyProfile() {
+    return {
+      name: "John Doe",
+      photo: "https://placehold.co/300/#FF8E75",
+    };
   }
 }

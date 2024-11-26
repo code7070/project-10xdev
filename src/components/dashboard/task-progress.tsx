@@ -10,7 +10,7 @@ export default function DashboardTaskProgress() {
   const ranged = service.getRangeDate();
 
   return (
-    <div className="relative w-full rounded-app-radius bg-app-orange text-white py-8 px-6 flex flex-col gap-4 justify-between">
+    <div className="relative size-full rounded-app-radius bg-app-orange text-white py-8 px-6 flex flex-col gap-4 justify-between">
       <div className="flex justify-between">
         <div className="text-[28px] font-semibold font-secondary flex-1">
           Progress
@@ -38,7 +38,7 @@ export default function DashboardTaskProgress() {
       >
         {ranged.map((r, n) => (
           <div key={n} className="text-xs">
-            <div className="rounded-full h-[120px] bg-white/20 relative">
+            <div className="rounded-full h-[120px] bg-white/20 relative overflow-hidden">
               <motion.div
                 variants={{
                   hidden: { height: 0 },

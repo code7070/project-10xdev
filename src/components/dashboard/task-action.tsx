@@ -12,7 +12,7 @@ export default function DashboardTaskAction() {
 
   return (
     <div
-      className="relative w-full rounded-app-radius bg-white text-black py-8 px-6 flex flex-col gap-4"
+      className="relative size-full rounded-app-radius bg-white text-black py-8 px-6 flex flex-col gap-4"
       style={{
         backgroundImage: "url(/pattern-white-box.png)",
         backgroundPosition: "top right",

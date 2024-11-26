@@ -38,7 +38,7 @@ export default function useAuth(token: string = ""): IUseAuth {
   }
 
   const { isLoading, data, mutate } = useSWR("/check-user", checkUser, {
-    refreshInterval: 60000,
+    refreshInterval: 30000,
   });
 
   return { isLoading, data, mutate };
