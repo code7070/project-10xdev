@@ -6,7 +6,10 @@ import { ReactNode } from "react";
 export default function AuthWrapper({
   children,
   token = "",
-}: Readonly<{ children: ReactNode; token: string }>) {
+}: {
+  children: ReactNode;
+  token: string;
+}) {
   const { data, isLoading, mutate } = useAuth(token);
   return (
     <AuthContext.Provider value={{ ...data?.data, isLoading, mutate }}>

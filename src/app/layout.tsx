@@ -25,12 +25,8 @@ export const metadata: Metadata = {
 
 export default async function RootLayout({
   children,
-  navigation,
-  profileBadge,
 }: Readonly<{
   children: React.ReactNode;
-  navigation: React.ReactNode;
-  profileBadge: React.ReactNode;
 }>) {
   const cookie = await cookies();
   return (
@@ -39,13 +35,7 @@ export default async function RootLayout({
         className={`${fontPrimary.variable} ${fontSecondary.variable} antialiased`}
       >
         <AuthWrapper token={cookie.get("pms-token")?.value || ""}>
-          <main className="flex">
-            {navigation}
-            <div className="flex-1 flex flex-col gap-6">
-              {profileBadge}
-              {children}
-            </div>
-          </main>
+          {children}
         </AuthWrapper>
         <Toaster
           toastOptions={{

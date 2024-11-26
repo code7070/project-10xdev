@@ -1,7 +1,7 @@
 "use client";
 
-import { AuthContext } from "@/services/useAuth";
-import { startTransition, useContext, useState } from "react";
+import { IContextUserData } from "@/services/useAuth";
+import { startTransition, useState } from "react";
 import style from "@/styles/profile-badge.module.scss";
 import { Loader } from "lucide-react";
 import { AnimatePresence, motion, Variants } from "framer-motion";
@@ -11,14 +11,17 @@ import { useRouter } from "next/navigation";
 
 const service = new DashboardService();
 
-export default function ProfileBadge() {
-  const { name, photo, isLoading, mutate, id } = useContext(AuthContext);
-
+export default function ProfileBadge({
+  mutate,
+  id,
+  name,
+  photo,
+  isLoading,
+}: Partial<IContextUserData>) {
   const dummy = service.dummyProfile();
   const router = useRouter();
 
   const [open, setOpen] = useState(false);
-  const [loading] = useState(false);
 
   function toggle() {
     if (id) setOpen((current) => !current);
@@ -44,7 +47,7 @@ export default function ProfileBadge() {
     startTransition(async () => {
       toggle();
       await logoutService();
-      mutate();
+      if (typeof mutate === "function") mutate();
     });
   }
 
@@ -104,11 +107,7 @@ export default function ProfileBadge() {
                 onClick={logout}
                 className="btn-danger-outline !transition-none"
               >
-                {loading ? (
-                  <Loader className="size-4 animate-spin" />
-                ) : (
-                  "Logout"
-                )}
+                Logout
               </motion.button>
             </motion.div>
           )}

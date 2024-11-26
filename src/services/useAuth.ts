@@ -23,12 +23,12 @@ interface IUseAuth {
   mutate: mutateUserData;
 }
 
-interface IContext extends IUserData {
+export interface IContextUserData extends IUserData {
   isLoading: boolean;
   mutate: mutateUserData;
 }
 
-export const AuthContext = createContext({} as IContext);
+export const AuthContext = createContext({} as IContextUserData);
 
 const fetch = new FetchService();
 
