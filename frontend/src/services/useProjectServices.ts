@@ -4,7 +4,6 @@ import useSWR, { SWRConfiguration } from "swr";
 import { FetchService } from "./fetcher";
 import { useEffect } from "react";
 import { ApiResponse, IResponse, ProjectDetail } from "@/types";
-import OpenAI from "openai";
 import { z } from "zod";
 
 const fetch = new FetchService();
@@ -14,16 +13,6 @@ const config: SWRConfiguration = {
   revalidateOnFocus: false,
   refreshInterval: 1000 * 60 * 3,
 };
-
-const task = z.object({
-  name: z.string(),
-  due_date: z.string(),
-});
-const base = z.object({
-  description: z.string(),
-  due_date: z.string(),
-  tasks: z.array(task),
-});
 
 type TProjectList = ApiResponse<string[]>;
 type TProjectDetail = ApiResponse<ProjectDetail>;
@@ -58,7 +47,7 @@ export function useProjectDetail(isLogin: boolean, id: string) {
   const { data, isLoading, mutate, isValidating } = useSWR(
     `/project/detail/${id}`,
     fetcher,
-    config
+    config,
   );
 
   useEffect(() => {
@@ -68,11 +57,29 @@ export function useProjectDetail(isLogin: boolean, id: string) {
   return { data, isLoading, mutate, isValidating };
 }
 
+interface TaskSet {
+  name: string;
+  due_date: string;
+}
+
+interface ProjectSet {
+  description: string;
+  due_date: string;
+  tasks: TaskSet[];
+}
+
 export async function useAIDescription(
-  projectName: string
-): Promise<IResponse<z.infer<typeof base>>> {
-  const res = (await fetch.GET("/project/generate-ai/description", {
+  projectName: string,
+): Promise<IResponse<ProjectSet>> {
+  const res = (await fetch.GET("/project/generate-ai", {
     projectName,
-  })) as IResponse<z.infer<typeof base>>;
+  })) as IResponse<ProjectSet>;
+  return res;
+}
+
+export async function generateProjectByAI(projectName: string) {
+  const res = (await fetch.GET("/project/generate-ai", {
+    projectName,
+  })) as IResponse<ProjectSet>;
   return res;
 }

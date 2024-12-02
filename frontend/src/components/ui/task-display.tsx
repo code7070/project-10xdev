@@ -25,15 +25,9 @@ export default function TaskListDisplay({
         {tasks?.map((i) => (
           <div key={i?.id} className={style.taskItem}>
             <div className="flex items-start gap-2.5">
-              {/* <div className={style.checkBox}>
-                <div className=""></div>
-              </div> */}
               <div>
                 <div className={style.name}>{i?.name}</div>
                 <div className={style.infoWrapper}>
-                  {/* <div className={style.project}>
-                    in {i?.project?.name || ""}
-                  </div> */}
                   <div className={style.project}>Due</div>
                   <div className={style.date}>
                     <Calendar className="size-3" />

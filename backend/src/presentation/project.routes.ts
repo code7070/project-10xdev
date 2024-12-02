@@ -11,7 +11,7 @@ export const projectRoutes = new Elysia({ prefix: "/project" })
     "/detail/:projectId",
     async ({ params: { projectId }, cookie: { "pms-token": token } }) => {
       return await projectService.getDetail(projectId, token.value!);
-    }
+    },
   )
   .post(
     "/",
@@ -26,15 +26,15 @@ export const projectRoutes = new Elysia({ prefix: "/project" })
         updated_at: t.Optional(t.String()),
         updated_by: t.Optional(t.String()),
       }),
-    }
+    },
   )
   .get("/active", async () => {
     return await projectService.getActive();
   })
   .get(
-    "/generate-ai/description",
+    "/generate-ai",
     async ({ query }) => {
       return await aiService.project().description(query.projectName);
     },
-    { query: t.Object({ projectName: t.String() }) }
+    { query: t.Object({ projectName: t.String() }) },
   );

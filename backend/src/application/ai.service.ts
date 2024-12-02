@@ -15,8 +15,6 @@ const base = z.object({
   tasks: z.array(tasks),
 });
 
-type ResponseDescription = Promise<z.infer<typeof base> | null>;
-
 export class AIService {
   private apiKey = process.env.OPENAI_API_KEY;
   private openai: OpenAI;

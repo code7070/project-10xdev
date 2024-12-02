@@ -30,6 +30,7 @@ import { createTask } from "@/services/useTaskService";
 import { toast } from "sonner";
 import { KeyedMutator } from "swr";
 import { format } from "date-fns";
+import SelectEmployee from "./select-employee";
 
 export default function AddTask({
   item,
@@ -131,7 +132,7 @@ export default function AddTask({
                           onSelect={(date) =>
                             form.setValue(
                               "due_date",
-                              new Date(date || "").toISOString()
+                              new Date(date || "").toISOString(),
                             )
                           }
                         />
@@ -146,31 +147,17 @@ export default function AddTask({
             />
             <div>
               <div>Choose workers:</div>
-              <div className="grid grid-cols-3 gap-2 flex-wrap max-h-[200px] overflow-y-auto">
-                {data &&
-                  data.map((i) => (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      className={`flex flex-col justify-start bg-transparent hover:bg-gray-200 ${
-                        i.id === employeeId && "!bg-app-green !text-white"
-                      }`}
-                      key={i.id}
-                      onClick={() => {
-                        form.setValue("employee_id", i.id);
-                      }}
-                    >
-                      {i.id === employeeId ? (
-                        <div className="size-10 flex items-center justify-center">
-                          <CheckCircle className="!size-6" />
-                        </div>
-                      ) : (
-                        <EmployeeAvatar {...i} key={i.id} />
-                      )}
-                      <span>{i.name}</span>
-                    </Button>
-                  ))}
-              </div>
+              {data ? (
+                <div className="grid grid-cols-3 gap-2 flex-wrap max-h-[200px] overflow-y-auto">
+                  <SelectEmployee
+                    list={data}
+                    selected={employeeId}
+                    onSelect={(e) => form.setValue("employee_id", e)}
+                  />
+                </div>
+              ) : (
+                <Loader className="size-5 animate-spin" />
+              )}
             </div>
           </form>
         </Form>
