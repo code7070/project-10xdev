@@ -46,12 +46,18 @@ export default function FormProject({
     "#C44634",
   ];
 
+  const taskSchema = z.object({
+    name: z.string(),
+    due_date: z.string(),
+  });
+
   const schema = z.object({
     name: z.string(),
     description: z.string(),
     due_date: z.string(),
     status: z.string(),
     color: z.string(),
+    tasks: z.optional(z.array(taskSchema)),
   });
 
   const form = useForm<z.infer<typeof schema>>({
@@ -62,6 +68,7 @@ export default function FormProject({
       due_date: defaultValues?.due_date || new Date().toISOString(),
       status: defaultValues?.status || "",
       color: defaultValues?.color || "",
+      tasks: [],
     },
   });
 
@@ -83,7 +90,12 @@ export default function FormProject({
   async function generateAI() {
     setLoading(true);
     const res = await useAIDescription(name);
-    console.log("Res: ", res);
+    if (res && res.data) {
+      form.setValue("description", res.data.description);
+      form.setValue("due_date", res.data.due_date);
+      form.setValue("tasks", res.data.tasks);
+      form.setValue("color", colors[Math.floor(Math.random() * colors.length)]);
+    }
     setMode("full");
     setLoading(false);
   }
@@ -113,7 +125,11 @@ export default function FormProject({
           render={({ field }) => (
             <FormItem>
               <FormLabel>Project Name</FormLabel>
-              <Input placeholder="Enter project name" {...field} />
+              <Input
+                placeholder="Enter project name"
+                className="!text-lg p-6"
+                {...field}
+              />
               <FormDescription>
                 This is your project's display name
               </FormDescription>
@@ -137,6 +153,7 @@ export default function FormProject({
                     <FormLabel>Description</FormLabel>
                     <Textarea
                       placeholder="Enter project description"
+                      className="!text-base"
                       rows={5}
                       {...field}
                     />

@@ -15,21 +15,18 @@ const config: SWRConfiguration = {
   refreshInterval: 1000 * 60 * 3,
 };
 
-const tasks = z.array(
-  z.object({
-    name: z.string(),
-    due_date: z.string(),
-  })
-);
+const task = z.object({
+  name: z.string(),
+  due_date: z.string(),
+});
 const base = z.object({
   description: z.string(),
   due_date: z.string(),
-  tasks: z.array(tasks),
+  tasks: z.array(task),
 });
 
 type TProjectList = ApiResponse<string[]>;
 type TProjectDetail = ApiResponse<ProjectDetail>;
-type AICompletionMessage = OpenAI.Chat.Completions.ChatCompletionMessage;
 
 export default function useProjectList(isLogin: boolean) {
   async function fetcher(): Promise<false | TProjectList> {

@@ -2,6 +2,8 @@ import OpenAI from "openai";
 import { z } from "zod";
 import { zodResponseFormat } from "openai/helpers/zod";
 import { error } from "elysia";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
 
 const tasks = z.object({
   name: z.string(),
@@ -24,6 +26,16 @@ export class AIService {
   }
 
   private async generateProjectDescription(projectName: string) {
+    const date = format(new Date(), "d MMMM yyy", { locale: id });
+    const systemContent = [
+      `Kamu adalah seorang Project Manager senior yang bekerja di Agency Digital untuk membuat atau memperbaiki website dan aplikasi. Kamu memimpin sebuah tim yang berisi frontend developer, backend developer, designer UI/UX, dan data engineer. Kamu akan membantu Project Manager junior untuk membantu memberi saran dalam bentuk:`,
+      `- Deskripsi yang tidak panjang dan straight-forwards sebanyak 2 kalimat. Kalimat harus menggambarkan apa saja yang akan dilakukan pada project dan spesifikasi singkat. Fokuslah untuk menjawab tanpa kata pengantar atau pendahuluan.`,
+      `- Due date project dengan format yyy-MM-dd, serta pastikan due date project minimal 1 bulan dari tanggal hari ini.`,
+      `- 5 task yang relate dengan nama dan deskripsi project. Masing-masing task berisi nama dan due date dengan format yyy-MM-dd, pastikan due date task tidak melebihi due date project dengan estimasi yang tepat`,
+    ];
+    const userContent = [
+      `Bantu Saya untuk project ${projectName} - Hari ini adalah tanggal ${date}`,
+    ];
     try {
       const completion = await this.openai.beta.chat.completions.parse({
         model: "gpt-4o-2024-08-06",
@@ -31,26 +43,24 @@ export class AIService {
           {
             role: "system",
             content: [
-              {
-                type: "text",
-                text: "Kamu adalah seorang Project Manager senior yang bekerja di Agency Digital untuk membuat website dan aplikasi. Kamu akan membantu Project Manager junior untuk membantu memberi saran dalam bentuk:\n- Deskripsi yang tidak panjang dan straight-forwards sebanyak 2 kalimat. Kalimat harus menggambarkan apa yang akan dilakukan untuk melakukan project dan spesifikasi singkat. Fokuslah untuk menjawab tanpa kata pengantar atau pendahuluan.\n- Due date project dengan waktu minimal 3 bulan dari tanggal hari ini dan berikan dengan format yyy-MM-dd.\n- 5 task yang relate dengan nama dan deskripsi project. Masing-masing task berisi nama dan due date dengan minimal hari ini dan kurang dari due date project dalam format yyy-MM-dd.",
-              },
+              { type: "text", text: systemContent.map((i) => i).join("\n") },
             ],
           },
           {
             role: "user",
             content: [
-              {
-                type: "text",
-                text: `Bantu Saya untuk project \"${projectName}\"`,
-              },
+              { type: "text", text: userContent.map((i) => i).join("\n") },
             ],
           },
         ],
         response_format: zodResponseFormat(base, "project_completion"),
+        temperature: 1,
+        max_tokens: 2048,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0,
       });
       const res = completion.choices[0].message.parsed;
-      console.log("BACKEEEENDD: ", res);
       return { status: 200, data: res };
     } catch (e) {
       return error(400, {
