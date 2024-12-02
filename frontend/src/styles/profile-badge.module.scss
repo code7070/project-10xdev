@@ -1,0 +1,23 @@
+.wrapper {
+  @apply sticky top-0 p-4 z-50;
+}
+
+.inner {
+  @apply flex justify-end relative size-full;
+}
+
+.profileBadge {
+  @apply flex items-center gap-3 justify-between !w-auto bg-white border border-gray-200 rounded-app-radius py-2 px-3 capitalize;
+
+  .photo {
+    @apply size-10 rounded-full relative overflow-hidden select-none pointer-events-none flex items-center justify-center;
+
+    img {
+      @apply w-full h-full object-cover block;
+    }
+  }
+}
+
+.menu {
+  @apply bg-gray-700 text-white p-4 rounded-app-radius w-52  absolute top-full right-0 flex flex-col gap-2;
+}

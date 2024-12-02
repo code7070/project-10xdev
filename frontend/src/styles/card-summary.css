@@ -1,0 +1,72 @@
+.projectCardSummary {
+  @apply relative py-8 px-6 text-white rounded-app-radius-lg;
+  background-image: url("/pattern-green-box.png");
+  background-position: bottom left;
+  background-size: contain;
+}
+
+.projectCardSummary:nth-child(5n + 1) {
+  @apply bg-app-green;
+}
+
+.projectCardSummary:nth-child(5n + 2) {
+  @apply bg-app-orange;
+}
+
+.projectCardSummary:nth-child(5n + 3) {
+  @apply bg-app-blue;
+}
+
+.projectCardSummary:nth-child(5n + 4) {
+  @apply bg-app-red;
+}
+
+.projectCardSummary:nth-child(5n + 5) {
+  @apply bg-app-violet;
+}
+
+.projectCardSummary .inner {
+  @apply flex flex-col gap-8 w-full;
+}
+
+.projectCardSummary .inner .title {
+  @apply font-secondary font-semibold text-2xl;
+}
+
+.projectCardSummary .inner .statusRow {
+  @apply flex items-center gap-2.5 text-sm;
+}
+
+.projectCardSummary .inner .statusLabel {
+  @apply rounded-full py-0.5 px-2 bg-white/20 text-xs;
+}
+
+.projectCardSummary .inner .statusDuedate {
+  @apply flex items-center gap-1 text-white/80;
+}
+
+.projectCardSummary .inner .infoRow {
+  @apply grid grid-cols-[1fr_1fr_1fr_80px] gap-3;
+}
+
+.projectCardSummary .inner .boxInfo {
+  @apply bg-white/10 rounded-2xl py-3 px-4 h-[110px];
+  @apply flex flex-col gap-1.5 justify-between w-full;
+}
+
+.projectCardSummary .inner .boxInfo .peopleNumber {
+  @apply font-semibold text-base;
+}
+
+.projectCardSummary .inner .boxInfo .statusNumber {
+  @apply text-[40px] font-semibold;
+}
+
+.projectCardSummary .inner .boxInfo .infoText {
+  @apply font-medium text-xs font-secondary;
+}
+
+.projectCardSummary .inner .boxInfo.link {
+  @apply justify-center items-center active:scale-90 transition-all;
+  @apply bg-white text-stone-800;
+}

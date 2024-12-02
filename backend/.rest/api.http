@@ -1,0 +1,45 @@
+### GET Root
+GET http://localhost:3009/
+
+### GET Product
+GET http://localhost:3009/product/39
+Content-Type: application/json
+
+### POST Product
+POST http://localhost:3009/product
+Authorization: Bearer Something
+Content-Type: application/json
+
+{
+    "name": "test",
+    "price": "100"
+}
+
+### Create Project
+POST http://localhost:3001/project/
+Authorization: Bearer Something
+Content-Type: application/json
+
+{
+  "name": "Data Analytics Platform",
+  "description": "Develop a new data analytics platform to help the company make data-driven decisions.",
+  "due_date": "2026-02-28"
+}
+
+
+
+### Task Route
+GET http://localhost:3001/task/project/9becdde1-b15f-43cf-a54e-71ada9dbea53
+
+### Create Task
+POST http://localhost:3001/task/create
+Authorization: Bearer Something
+Content-Type: application/json
+
+{
+        "name": "conduct user testing",
+        "project_id": "9becdde1-b15f-43cf-a54e-71ada9dbea53",
+        "updated_by": "1",
+        "employee_id": "3b21371f-c820-4217-8abc-1e5bfaf3e1fd",
+        "due_date": "2023-12-13T00:00:00Z"
+    }

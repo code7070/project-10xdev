@@ -1,0 +1,51 @@
+.navside {
+  @apply hidden lg:block lg:w-[248px] h-screen bg-gray-700 rounded-r-app-radius text-gray-100 relative;
+  @apply sticky top-0;
+
+  &::after {
+    content: "";
+    @apply pointer-events-none absolute left-0 bottom-0 w-full h-[244px];
+    background-image: url("/accent-background.png");
+    background-size: contain;
+  }
+}
+
+.wrapper {
+  @apply w-full flex flex-col justify-between flex-1 h-full;
+}
+
+.topSet {
+  @apply flex flex-col gap-6 px-2 py-10;
+}
+
+.navItem {
+  @apply flex items-center gap-4 w-full px-4 py-3 rounded-full;
+  @apply hover:bg-white/90 hover:text-gray-700;
+}
+
+.navItemActive {
+  @extend .navItem;
+  @apply bg-app-orange text-gray-100 hover:bg-app-orange hover:text-gray-100;
+}
+
+//
+.bottomSet {
+  @apply px-4 pt-2 pb-10 flex flex-col gap-6 relative;
+}
+
+.dueBox {
+  @apply bg-white text-black rounded-app-radius p-4;
+  @apply flex flex-col gap-3;
+
+  .title {
+    @apply text-app-red-500 flex gap-1 items-center text-xs;
+  }
+
+  .tasks {
+    @apply text-black font-secondary font-medium text-3xl;
+  }
+
+  .details {
+    @apply flex justify-between items-center text-stone-600 text-sm transition-all p-1 rounded-full hover:pl-2 hover:bg-app-orange hover:text-white;
+  }
+}

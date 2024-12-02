@@ -1,0 +1,24 @@
+.projectBannerCreate {
+  @apply bg-stone-800 text-white rounded-app-radius-lg min-h-[151px] w-full;
+  @apply flex flex-col justify-end;
+  background-image: url("/bg-banner-create.png");
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
+.projectBannerCreate.green {
+  @apply bg-app-green;
+}
+
+.projectBannerCreate .inner {
+  @apply w-full flex items-end justify-between p-6;
+}
+
+.projectBannerCreate .title {
+  @apply text-4xl font-bold font-secondary;
+}
+
+.projectBannerCreate .desc {
+  @apply text-xs text-gray-400;
+}
