@@ -25,7 +25,7 @@ export class ProjectService {
     return this.helperService.handleResponse(result);
   }
 
-  async create(data: Partial<Project>) {
+  async create(data: Partial<Project>, token: string) {
     const colors = [
       "#89221F",
       "#FE6948",
@@ -35,11 +35,15 @@ export class ProjectService {
       "#C44634",
     ];
     const random = colors[Math.floor(Math.random() * colors.length)];
-    const result = await this.projectRepo.create({
-      id: uuid(),
-      color: random,
-      ...data,
-    });
+    const result = await this.projectRepo.create(
+      {
+        id: uuid(),
+        color: random,
+        status: "ACTIVE",
+        ...data,
+      },
+      token,
+    );
     return this.helperService.handleResponse(result);
   }
 

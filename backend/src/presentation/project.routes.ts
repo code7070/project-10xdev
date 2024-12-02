@@ -15,16 +15,25 @@ export const projectRoutes = new Elysia({ prefix: "/project" })
   )
   .post(
     "/",
-    async ({ body }) => {
-      return await projectService.create(body);
+    async ({ body, cookie: { "pms-token": token } }) => {
+      return await projectService.create(body, token.value!);
     },
     {
       body: t.Object({
+        id: t.Optional(t.String()),
         name: t.String(),
         description: t.String(),
         due_date: t.String(),
         updated_at: t.Optional(t.String()),
         updated_by: t.Optional(t.String()),
+        status: t.Optional(
+          t.Union([
+            t.Literal("ACTIVE"),
+            t.Literal("DONE"),
+            t.Literal("CANCELED"),
+            t.Literal("PENDING"),
+          ]),
+        ),
       }),
     },
   )

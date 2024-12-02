@@ -3,8 +3,7 @@
 import useSWR, { SWRConfiguration } from "swr";
 import { FetchService } from "./fetcher";
 import { useEffect } from "react";
-import { ApiResponse, IResponse, ProjectDetail } from "@/types";
-import { z } from "zod";
+import { ApiResponse, IResponse, Project, ProjectDetail } from "@/types";
 
 const fetch = new FetchService();
 
@@ -81,5 +80,10 @@ export async function generateProjectByAI(projectName: string) {
   const res = (await fetch.GET("/project/generate-ai", {
     projectName,
   })) as IResponse<ProjectSet>;
+  return res;
+}
+
+export async function createProject(project: Partial<Project>) {
+  const res = (await fetch.POST("/project", project)) as IResponse<string>;
   return res;
 }

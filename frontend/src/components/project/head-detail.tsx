@@ -17,7 +17,7 @@ export default function ProjectHeadDetail({
 }: HeadDetailProps) {
   const { color, name, status, due_date, description } = item;
 
-  const dueDate = due_date ? format(new Date(due_date), "do MM yyy") : "-";
+  const dueDate = due_date ? format(new Date(due_date), "do MMM yyy") : "-";
 
   return (
     <div
@@ -29,7 +29,9 @@ export default function ProjectHeadDetail({
           <div className="flex flex-col gap-1">
             <h1 className="title">{name}</h1>
             {description && (
-              <div className="desc !text-white">{description}</div>
+              <div className="desc !text-white line-clamp-3 font-semibold">
+                {description}
+              </div>
             )}
           </div>
           <div className="flex items-center gap-4">

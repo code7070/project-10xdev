@@ -71,13 +71,22 @@ export class ProjectRepo implements IProject {
     return user.error;
   }
 
-  async create(data: Partial<Project>) {
-    const res = await this.supabase
-      .from(this.tableName)
-      .insert(data)
-      .select("id");
-    if (res.error) return res.error;
-    return res.data.map((i) => i.id);
+  async create(data: Partial<Project>, token: string) {
+    const user = await this.supabase
+      .from(this.tableUser)
+      .select("id")
+      .eq("token", token)
+      .single();
+    if (user && user.data) {
+      const res = await this.supabase
+        .from(this.tableName)
+        .insert({ ...data, created_by: user.data.id })
+        .select("id")
+        .single();
+      if (res.error) return res.error;
+      return res.data.id;
+    }
+    return user.error;
   }
 
   async update(id: string, data: Partial<Project>) {

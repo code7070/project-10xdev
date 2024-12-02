@@ -3,7 +3,7 @@
 import { useEmployee } from "@/services/useEmployeeService";
 import { Button } from "../ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Loader } from "lucide-react";
+import { Loader, Users } from "lucide-react";
 import { useMemo, useState } from "react";
 import SelectEmployee from "./select-employee";
 import { Employee } from "@/types";
@@ -35,7 +35,10 @@ export default function PopupSelectEmployee({
               {person.name}
             </>
           ) : (
-            "Assignment"
+            <div className="flex gap-4">
+              Assignment
+              <Users size="sm" />
+            </div>
           )}
         </Button>
       </PopoverTrigger>

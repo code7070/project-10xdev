@@ -26,11 +26,18 @@ import { format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import { useState } from "react";
-import { generateProjectByAI } from "@/services/useProjectServices";
+import {
+  createProject,
+  generateProjectByAI,
+} from "@/services/useProjectServices";
 import { motion, Variants } from "framer-motion";
 import style from "@/styles/task-display.module.scss";
 import PopupSelectEmployee from "./popup-select-employee";
 import { Separator } from "../ui/separator";
+import { v4 as uuid } from "uuid";
+import { createTask } from "@/services/useTaskService";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function FormProject({
   defaultValues,
@@ -39,6 +46,8 @@ export default function FormProject({
 }) {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<"name" | "full">("name");
+
+  const router = useRouter();
 
   const colors = [
     "#89221F",
@@ -52,13 +61,14 @@ export default function FormProject({
   const taskSchema = z.object({
     name: z.string(),
     due_date: z.string(),
+    employee_id: z.string(),
+    project_id: z.string(),
   });
 
   const schema = z.object({
     name: z.string(),
     description: z.string(),
     due_date: z.string(),
-    status: z.string(),
     color: z.string(),
     tasks: z.optional(z.array(taskSchema)),
   });
@@ -69,21 +79,39 @@ export default function FormProject({
       name: defaultValues?.name || "",
       description: defaultValues?.description || "",
       due_date: defaultValues?.due_date || new Date().toISOString(),
-      status: defaultValues?.status || "",
       color: defaultValues?.color || "",
       tasks: [],
     },
   });
 
   async function onSubmit(data: z.infer<typeof schema>) {
-    setLoading(true);
     const random = Math.floor(Math.random() * colors.length);
-    const payload = { ...data };
-    if (payload.color === "") payload.color = colors[random];
-    console.log("submit: ", payload);
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    const projectId = uuid();
+
+    const project = { ...data, id: projectId };
+    if (project.color === "") project.color = colors[random];
+    if (project.tasks && project.tasks.length > 0) delete project.tasks;
+
+    let tasks: Array<z.infer<typeof taskSchema>> = [];
+    if (data.tasks && data.tasks.length > 0) {
+      tasks = [...data.tasks].map((i) => ({ ...i, project_id: projectId }));
+      const noEmployee = tasks.filter((i) => !i.employee_id).length > 0;
+      if (noEmployee) return alert("Complete tasks with assignment");
+    }
+
+    setLoading(true);
+    const resProject = await createProject(project);
+    if (tasks.length > 0) {
+      /* eslint-disable-next-line */
+      const resTasks = await Promise.all(
+        tasks.map(async (i) => await createTask(i)),
+      );
+    }
+    setLoading(false);
+    if (resProject.status === 200) {
+      toast.success("Project berhasil dibuat");
+      router.replace("/project");
+    }
   }
 
   async function generateAI() {
@@ -92,7 +120,10 @@ export default function FormProject({
     if (res && res.data) {
       form.setValue("description", res.data.description);
       form.setValue("due_date", res.data.due_date);
-      form.setValue("tasks", res.data.tasks);
+      form.setValue(
+        "tasks",
+        res.data.tasks.map((i) => ({ ...i, employee_id: "", project_id: "" })),
+      );
       form.setValue("color", colors[Math.floor(Math.random() * colors.length)]);
     }
     setMode("full");
@@ -246,39 +277,62 @@ export default function FormProject({
                   key={n}
                   className={`${style.taskItem} -mx-2`}
                 >
-                  <div className="flex items-start gap-2.5">
-                    <div>
-                      <div className={style.name}>{i?.name}</div>
-                      <div className={`${style.infoWrapper} mt-2`}>
-                        <div className={style.project}>Due at</div>
-                        <div className={style.date}>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <Button variant="outline" size="sm">
-                                {format(i?.due_date || "", "do MMM yyy")}{" "}
-                                <CalendarIcon className="ml-4" />
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent>
-                              <Calendar
-                                mode="single"
-                                selected={new Date(i?.due_date || "")}
-                                onSelect={(date) =>
-                                  form.setValue(
-                                    "due_date",
-                                    new Date(date || "").toISOString(),
-                                  )
-                                }
+                  <div className="flex items-start gap-2.5 flex-1">
+                    <div className="w-full">
+                      <div className={style.name}>
+                        <FormField
+                          control={form.control}
+                          name={`tasks.${n}.name`}
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Task Name</FormLabel>
+                              <Input placeholder="Task Name" {...field} />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                      <div className={`${style.infoWrapper} mt-5 !gap-5`}>
+                        <div className="flex flex-col gap-1">
+                          <FormLabel>Due Date</FormLabel>
+                          <FormField
+                            control={form.control}
+                            name={`tasks.${n}.due_date`}
+                            render={({ field }) => (
+                              <Popover>
+                                <PopoverTrigger asChild>
+                                  <Button variant="outline" size="sm">
+                                    {format(i?.due_date || "", "do MMM yyy")}{" "}
+                                    <CalendarIcon className="ml-4" />
+                                  </Button>
+                                </PopoverTrigger>
+                                <PopoverContent>
+                                  <Calendar
+                                    mode="single"
+                                    selected={new Date(field.value || "")}
+                                    onSelect={(date) =>
+                                      field.onChange(date?.toISOString())
+                                    }
+                                  />
+                                </PopoverContent>
+                              </Popover>
+                            )}
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1">
+                          <FormLabel>Assignee</FormLabel>
+                          <FormField
+                            control={form.control}
+                            name={`tasks.${n}.employee_id`}
+                            render={({ field }) => (
+                              <PopupSelectEmployee
+                                onSelect={(user) => field.onChange(user.id)}
                               />
-                            </PopoverContent>
-                          </Popover>
+                            )}
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
-                  <PopupSelectEmployee
-                    onSelect={(e) => console.log("Selection: ", e)}
-                  />
                 </motion.div>
               ))}
             </div>

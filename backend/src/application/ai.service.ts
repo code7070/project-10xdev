@@ -29,7 +29,7 @@ export class AIService {
       `Kamu adalah seorang Project Manager senior yang bekerja di Agency Digital untuk membuat atau memperbaiki website dan aplikasi. Kamu memimpin sebuah tim yang berisi frontend developer, backend developer, designer UI/UX, dan data engineer. Kamu akan membantu Project Manager junior untuk membantu memberi saran dalam bentuk:`,
       `- Deskripsi yang tidak panjang dan straight-forwards sebanyak 2 kalimat. Kalimat harus menggambarkan apa saja yang akan dilakukan pada project dan spesifikasi singkat. Fokuslah untuk menjawab tanpa kata pengantar atau pendahuluan.`,
       `- Due date project dengan format yyy-MM-dd, serta pastikan due date project minimal 1 bulan dari tanggal hari ini.`,
-      `- 5 task yang relate dengan nama dan deskripsi project. Masing-masing task berisi nama dan due date dengan format yyy-MM-dd, pastikan due date task tidak melebihi due date project dengan estimasi yang tepat`,
+      `- 6 task yang relate dengan nama dan deskripsi project. Masing-masing task berisi nama dan due date dengan format yyy-MM-dd, pastikan due date task tidak melebihi due date project dengan estimasi yang tepat`,
     ];
     const userContent = [
       `Bantu Saya untuk project ${projectName} - Hari ini adalah tanggal ${date}`,

@@ -14,12 +14,12 @@ export interface IUser {
   create: (
     name: string,
     password: string,
-    photo: string
+    photo: string,
   ) => Promise<User | PostgrestError>;
   update: (id: number, data: Partial<User>) => Promise<User | PostgrestError>;
   login: (
     name: string,
-    password: string
+    password: string,
   ) => Promise<Partial<User> | PostgrestError>;
 }
 
@@ -29,10 +29,11 @@ export interface Project {
   description: string;
   due_date?: string;
   created_at?: string;
+  created_by?: string;
   updated_at?: string;
   updated_by?: string;
   deleted_at?: string;
-  status?: "ACTIVE" | "DONE" | "CANCELED";
+  status?: "ACTIVE" | "DONE" | "CANCELED" | "PENDING";
   color?: string;
 }
 
@@ -40,14 +41,15 @@ export interface IProject {
   get: (token: string) => Promise<string[] | PostgrestError>;
   getDetail: (
     id: string,
-    token: string
+    token: string,
   ) => Promise<ProjectDetail | PostgrestError>;
   create: (
-    data: Partial<Project>
+    data: Partial<Project>,
+    token: string,
   ) => Promise<string[] | string | PostgrestError>;
   update: (
     id: string,
-    data: Partial<Project>
+    data: Partial<Project>,
   ) => Promise<Partial<Project[]> | PostgrestError>;
   delete: (id: string) => Promise<void | string>;
   getActive: () => Promise<Partial<Task[]> | PostgrestError>;
@@ -78,19 +80,19 @@ interface TaskProgress {
 
 export interface ITask {
   getByProject: (
-    projectId: string
+    projectId: string,
   ) => Promise<Partial<Task[]> | PostgrestError>;
   getByDoneDate: (
     date: string,
-    idOnly?: boolean
+    idOnly?: boolean,
   ) => Promise<Partial<Task[]> | PostgrestError>;
   create?: (
     data: Partial<Task>,
-    token: string
+    token: string,
   ) => Promise<string | PostgrestError>;
   update?: (
     id: string,
-    data: Partial<Task>
+    data: Partial<Task>,
   ) => Promise<Partial<Task> | PostgrestError>;
   delete?: (id: string) => Promise<string | void>;
   getDueSoon?: (date: string) => Promise<Partial<Task[]> | PostgrestError>;

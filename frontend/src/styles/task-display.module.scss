@@ -1,48 +1,48 @@
 .taskDisplay {
-  @apply relative size-full rounded-app-radius bg-white text-black py-8 px-6 flex flex-col gap-4;
-  background-image: url("/pattern-white-box.png");
-  background-position: top right;
-  background-size: top right;
-  background-repeat: no-repeat;
+    @apply relative size-full rounded-app-radius bg-white text-black py-8 px-6 flex flex-col gap-4;
+    background-image: url("/pattern-white-box.png");
+    background-position: top right;
+    background-size: top right;
+    background-repeat: no-repeat;
 }
 
 .title {
-  @apply text-[28px] font-semibold font-secondary;
+    @apply text-[28px] font-semibold font-secondary;
 }
 
 .subtitle {
-  @apply font-medium text-sm text-gray-500;
+    @apply font-medium text-sm text-gray-500;
 }
 
 .taskItem {
-  @apply py-3 flex items-start gap-2.5 w-full justify-between border border-transparent;
-  @apply hover:bg-gray-100/50 hover:border-gray-300 p-3 rounded-app-radius;
+    @apply py-3 flex items-start gap-5 w-full justify-between border border-transparent;
+    @apply hover:bg-gray-100/50 hover:border-gray-300 p-3 rounded-app-radius;
 }
 
 .checkBox {
-  @apply py-1;
+    @apply py-1;
 
-  div {
-    @apply size-4 border border-app-orange rounded-md;
-  }
+    div {
+        @apply size-4 border border-app-orange rounded-md;
+    }
 }
 
 .name {
-  @apply text-sm;
+    @apply text-sm;
 }
 
 .infoWrapper {
-  @apply flex items-center gap-2 text-xs;
+    @apply flex items-center gap-2 text-xs;
 
-  .project {
-    @apply text-gray-500;
-  }
+    .project {
+        @apply text-gray-500;
+    }
 
-  .date {
-    @apply flex items-center gap-1 text-red-500;
-  }
+    .date {
+        @apply flex items-center gap-1 text-red-500;
+    }
 }
 
 .ctaView {
-  @apply flex items-center gap-2 p-2 pl-3 rounded-full border border-gray-200 bg-white hover:bg-gray-200 text-stone-700 text-xs;
+    @apply flex items-center gap-2 p-2 pl-3 rounded-full border border-gray-200 bg-white hover:bg-gray-200 text-stone-700 text-xs;
 }
