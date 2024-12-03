@@ -1,6 +1,5 @@
-import { addDays, addHours, eachDayOfInterval, subDays } from "date-fns";
+import { addHours, eachDayOfInterval, subDays } from "date-fns";
 import { FetchService } from "./fetcher";
-import { Project } from "@/types";
 import { dummyProjects } from "./dummy.dashboard";
 
 export class DashboardService {

@@ -11,7 +11,6 @@ const sizing = {
 };
 
 export default function EmployeeAvatar({
-  id,
   name,
   photo,
   size = "md",

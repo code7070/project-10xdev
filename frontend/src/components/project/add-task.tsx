@@ -1,4 +1,4 @@
-import { CheckCircle, Loader, Plus } from "lucide-react";
+import { Loader, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ApiResponse, ProjectDetail } from "@/types";
 import {
@@ -11,7 +11,6 @@ import {
 } from "@/components/ui/dialog";
 import z from "zod";
 import { useEmployee } from "@/services/useEmployeeService";
-import EmployeeAvatar from "./avatar";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -42,7 +41,7 @@ export default function AddTask({
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const { data, isLoading } = useEmployee({ isLogin: true });
+  const { data } = useEmployee({ isLogin: true });
 
   const schema = z.object({
     name: z.string(),

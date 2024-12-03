@@ -1,6 +1,6 @@
 "use client";
 
-import { Employee, Project } from "@/types";
+import { Project } from "@/types";
 import "@/styles/card-summary.css";
 import { differenceInDays, format } from "date-fns";
 import { useProjectDetail } from "@/services/useProjectServices";
@@ -23,10 +23,10 @@ export default function ProjectCardSummary({ id, isLogin }: CardProps) {
   let dateDisplay = "";
   if (dueDate) dateDisplay = format(new Date(dueDate), "MMM do yyy");
 
-  let people: Partial<Employee[]> = [];
-  if (data) {
-    people = data.data.people;
-  }
+  // let people: Partial<Employee[]> = [];
+  // if (data) {
+  //   people = data.data.people;
+  // }
 
   const taskAmount = useMemo(() => {
     if (data && data.data && data.data.tasks) {
@@ -40,7 +40,7 @@ export default function ProjectCardSummary({ id, isLogin }: CardProps) {
   const taskSoonAmount = useMemo(() => {
     if (data && data.data && data.data.tasks) {
       let num: TAmount = data.data.tasks.filter(
-        (i) => differenceInDays(new Date(), new Date(i?.due_date || "")) <= 3
+        (i) => differenceInDays(new Date(), new Date(i?.due_date || "")) <= 3,
       ).length;
       if (num > 99) num = "99+";
       return num;
