@@ -40,11 +40,8 @@ jobs:
           echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
 
       - name: Access server and Create & Run Docker Image
-        env:
-          SERVER_USER: ${{secrets.SERVER_USER}}
-          SERVER_IP: ${{secrets.SERVER_IP}}
         run: |
-          ssh -o StrictHostKeyChecking=no ${{SERVER_USER}}@${{SERVER_IP}} << EOF
+          ssh -o StrictHostKeyChecking=no ${{secrets.SERVER_USER}}@${{secrets.SERVER_IP}} << EOF
             cd project-10xdev
             git checkout main
             git pull
