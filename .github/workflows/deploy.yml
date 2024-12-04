@@ -15,6 +15,26 @@ jobs:
         uses: webfactory/ssh-agent@v0.5.3
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+      - name: Create temporary .env for Frontend
+        working-directory: ./frontend
+        run: |
+          touch .env.local
+          echo "API_URL=http://localhost:${{ secrets.BACKEND_PORT }}" >> .env
+          echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env
+          echo "API_ID=${{ secrets.API_ID }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "NEXT_PUBLIC_API_ID=${{ secrets.NEXT_PUBLIC_API_ID }}" >> .env
+          echo "NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }}" >> .env
+      - name: Create temporary .env for Backend
+        working-directory: ./backend
+        run: |
+          touch .env
+          echo "PORT=${{ secrets.BACKEND_PORT }}" >> .env
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
+          echo "SUPABASE_SECRET_KEY=${{ secrets.SUPABASE_SECRET_KEY }}" >> .env
+          echo "API_ID=${{ secrets.API_ID }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
       - name: Access server and Create & Run Docker Image
         env:
           SERVER_USER: ${{secrets.SERVER_USER}}
