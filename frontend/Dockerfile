@@ -24,9 +24,10 @@ RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
 COPY --chown=nextjs:nextjs . .
-COPY --from=builder --chown=nextjs:nextjs /app/public       ./public
+COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nextjs /app/public ./public
 COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nextjs /app/node_modules ./node_modules/
 
 EXPOSE 3000
-CMD ["bun", "run", "start"]
+CMD ["bun", "server.js"]
