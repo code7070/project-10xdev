@@ -1,6 +1,7 @@
 version: "3.8"
 services:
   frontendapp:
+    container_name: fe
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -9,6 +10,7 @@ services:
     environment:
       - NODE_ENV=production
   backendapp:
+    container_name: be
     build:
       context: ./backend
       dockerfile: Dockerfile
