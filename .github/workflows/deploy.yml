@@ -4,67 +4,49 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
 
-      - name: Create Frontend .env
+      - name: Create temporary .env for Frontend
         working-directory: ./frontend
         run: |
-          cat > .env << EOF
-          API_URL=http://localhost:${{ secrets.BACKEND_PORT }}
-          NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
-          API_ID=${{ secrets.API_ID }}
-          API_KEY=${{ secrets.API_KEY }}
-          NEXT_PUBLIC_API_ID=${{ secrets.NEXT_PUBLIC_API_ID }}
-          NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }}
-          NEXT_TELEMETRY_DISABLED=1
-          EOF
+          touch .env
+          echo "API_URL=http://localhost:${{ secrets.BACKEND_PORT }}" >> .env
+          echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env
+          echo "API_ID=${{ secrets.API_ID }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "NEXT_PUBLIC_API_ID=${{ secrets.NEXT_PUBLIC_API_ID }}" >> .env
+          echo "NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }}" >> .env
+          echo "NEXT_TELEMETRY_DEBUG=1" >> .env
 
-      - name: Create Backend .env
+      - name: Create temporary .env for Backend
         working-directory: ./backend
         run: |
-          cat > .env << EOF
-          PORT=${{ secrets.BACKEND_PORT }}
-          SUPABASE_URL=${{ secrets.SUPABASE_URL }}
-          SUPABASE_SECRET_KEY=${{ secrets.SUPABASE_SECRET_KEY }}
-          API_ID=${{ secrets.API_ID }}
-          API_KEY=${{ secrets.API_KEY }}
-          OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}
-          EOF
+          touch .env
+          echo "PORT=${{ secrets.BACKEND_PORT }}" >> .env
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
+          echo "SUPABASE_SECRET_KEY=${{ secrets.SUPABASE_SECRET_KEY }}" >> .env
+          echo "API_ID=${{ secrets.API_ID }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
 
-      - name: Build and Push Docker Images
+      - name: Access server and Create & Run Docker Image
         run: |
-          docker compose build
-          docker compose push
-
-      - name: Deploy to Server
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SERVER_IP }}
-          username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
+          ssh -o StrictHostKeyChecking=no ${{secrets.SERVER_USER}}@${{secrets.SERVER_IP}} << EOF
             cd project-10xdev
             git checkout main
             git pull
-            sudo docker compose pull
+            sudo docker compose build
             sudo docker compose down
             sudo docker compose up -d
+          EOF
