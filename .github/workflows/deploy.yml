@@ -35,7 +35,7 @@ jobs:
           API_KEY=${{ secrets.API_KEY }}
           NEXT_PUBLIC_API_ID=${{ secrets.NEXT_PUBLIC_API_ID }}
           NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }}
-          NEXT_TELEMETRY_DEBUG=1
+          NEXT_TELEMETRY_DISABLED=1
           EOF
 
       - name: Create Backend .env
@@ -52,7 +52,7 @@ jobs:
 
       - name: Build and Push Docker Images
         run: |
-          docker compose build
+          docker compose build --no-cache
           docker compose push
 
       - name: Deploy to Server
