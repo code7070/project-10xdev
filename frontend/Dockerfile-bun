@@ -2,15 +2,16 @@ FROM oven/bun AS base
 
 WORKDIR /app
 
-COPY ./package.json ./bun.lockb ./
+COPY package.json bun.lockb ./
 
-RUN bun install
+RUN bun install --frozen-lockfile
 
 FROM base AS builder
 WORKDIR /app
 COPY . .
 RUN bun run build
 
-CMD ["bun", "run", "start"]
+
+CMD ["bun", "dev"]
 
 EXPOSE 3000
