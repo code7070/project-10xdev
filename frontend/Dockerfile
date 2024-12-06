@@ -44,4 +44,4 @@ COPY --from=prerelease /app/public ./public
 CMD ["bun", "run", "build"]
 # run the app
 EXPOSE 3000
-CMD ["bun", "start" ]
+CMD ["bun", "dev" ]
