@@ -1,0 +1,52 @@
+name: PMS CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Create temporary .env for Frontend
+        working-directory: ./frontend
+        run: |
+          touch .env
+          echo "API_URL=http://localhost:${{ secrets.BACKEND_PORT }}" >> .env
+          echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" >> .env
+          echo "API_ID=${{ secrets.API_ID }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "NEXT_PUBLIC_API_ID=${{ secrets.NEXT_PUBLIC_API_ID }}" >> .env
+          echo "NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }}" >> .env
+          echo "NEXT_TELEMETRY_DEBUG=1" >> .env
+
+      - name: Create temporary .env for Backend
+        working-directory: ./backend
+        run: |
+          touch .env
+          echo "PORT=${{ secrets.BACKEND_PORT }}" >> .env
+          echo "SUPABASE_URL=${{ secrets.SUPABASE_URL }}" >> .env
+          echo "SUPABASE_SECRET_KEY=${{ secrets.SUPABASE_SECRET_KEY }}" >> .env
+          echo "API_ID=${{ secrets.API_ID }}" >> .env
+          echo "API_KEY=${{ secrets.API_KEY }}" >> .env
+          echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env
+
+      - name: Access server and Create & Run Docker Image
+        run: |
+          ssh -o StrictHostKeyChecking=no ${{secrets.SERVER_USER}}@${{secrets.SERVER_IP}} << EOF
+            cd project-10xdev
+            git checkout main
+            git pull
+            sudo docker compose build
+            sudo docker compose down
+            sudo docker compose up -d
+          EOF
