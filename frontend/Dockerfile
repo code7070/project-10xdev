@@ -11,6 +11,7 @@ WORKDIR /app
 COPY . .
 RUN bun run build
 
+CMD bun run dev
+
 EXPOSE 3000
 
-CMD bun run dev
