@@ -6,6 +6,12 @@ COPY ./package.json ./bun.lockb ./
 
 RUN bun install
 
+COPY . .
+ENV NEXT_TELEMETRY_DISABLED 1
+
+CMD ["bun", "run", "build"]
+
+
 FROM base AS builder
 
 WORKDIR /app
@@ -19,7 +25,6 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-ENV NEXT_TELEMETRY_DISABLED 1
 
 ENV PORT 3001
 ENV HOSTNAME localhost
