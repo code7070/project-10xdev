@@ -1,33 +1,31 @@
-FROM oven/bun:1.1.38 AS base
+# docker/dev.Dockerfile
+FROM oven/bun:latest
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+FROM base as deps
+
+COPY package.json bun.lockb ./
+RUN bun install
+
+FROM node:20 as build
 
 WORKDIR /app
 
-# ---
-FROM base AS builder
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN npm run build -- --no-lint
 
-COPY package.json bun.lockb ./
+FROM base as final
 
-RUN bun install --frozen-lockfile \
-    && bun next telemetry disable
+USER bun
 
-COPY . . 
-RUN bun run build
-
-RUN bun install --production --frozen-lockfile
-
-
-# ---
-FROM base AS final
-
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
-USER nextjs
-
-COPY --chown=nextjs:nextjs . .
-COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nextjs /app/public ./public
-COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
-COPY --from=builder --chown=nextjs:nextjs /app/node_modules ./node_modules/
+COPY --from=build /app/package.json ./package.json
+COPY --from=build /app/node_modules ./node_modules
+COPY --from=build /app/.next ./.next
+COPY --from=build /app/public ./public
 
 EXPOSE 3000
-CMD ["bun", "server.js"]
+
+CMD ["bun", "run", "start"]
