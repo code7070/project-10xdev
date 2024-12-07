@@ -31,5 +31,9 @@ COPY --from=builder --chown=nextjs:nextjs /app/public ./public
 COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nextjs /app/node_modules ./node_modules/
 
+RUN chown nextjs:bun .
+
+USER nextjs
+
 EXPOSE 3000
 CMD ["bun", "server.js"]
