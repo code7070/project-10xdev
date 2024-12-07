@@ -7,6 +7,7 @@ The spesification point for this app is:
 - Server actions available for logout in frontend
 - Built on single docker container which contains backend and frontend service
 - useTransition in /teams for showing people list
+- CRUD for Project
 - CI/CD using git actions
 - Using supabase as Database service
 - AI integration for create Project

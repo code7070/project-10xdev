@@ -13,7 +13,7 @@ const app = new Elysia()
   // Routes
   .use(
     cors({
-      origin: ["http://localhost:3000"],
+      origin: ["http://localhost:3000", "http://103.127.139.85:3000"],
       methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
     }),
