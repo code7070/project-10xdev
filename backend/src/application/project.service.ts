@@ -51,4 +51,15 @@ export class ProjectService {
     const result = await this.projectRepo.getActive();
     return this.helperService.handleResponse(result);
   }
+
+  async update(id: string, data: Partial<Project>, token: string) {
+    const result = await this.projectRepo.update(id, data, token);
+    return this.helperService.handleResponse(result);
+  }
+
+  async delete(id: string, date: string, token: string) {
+    const deleted_date = date || new Date().toISOString();
+    const result = await this.projectRepo.delete(id, deleted_date, token);
+    return this.helperService.handleResponse(result);
+  }
 }

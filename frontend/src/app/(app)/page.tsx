@@ -37,7 +37,7 @@ export default function Home() {
         initial="hidden"
         animate="visible"
         exit="hidden"
-        className="px-8 mt-6 flex flex-col gap-6"
+        className="page-wrapper"
       >
         <section className="grid grid-cols-[2fr_1fr_1fr] gap-4">
           <motion.div variants={vars}>

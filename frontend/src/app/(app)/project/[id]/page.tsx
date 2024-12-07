@@ -8,12 +8,18 @@ import ProjectHeadDetail from "@/components/project/head-detail";
 import TaskListDisplay from "@/components/ui/task-display";
 import { Loader } from "lucide-react";
 
+export type IActionState = [
+  state: boolean | string,
+  dispatch: (payload: string) => void,
+  isPending: boolean,
+];
+
 export default function ProjectDetailPage() {
   const params = useParams<{ id: string }>();
 
   const { data, isLoading, mutate, isValidating } = useProjectDetail(
     true,
-    params.id
+    params.id,
   );
 
   let project: Partial<ProjectDetail> = {};
@@ -22,7 +28,7 @@ export default function ProjectDetailPage() {
   }
 
   return (
-    <div className="px-8 mt-6 flex flex-col gap-6 projectPage mb-40">
+    <div className="page-wrapper projectPage mb-40">
       <ProjectHeadDetail {...project} isLoading={isLoading} mutate={mutate} />
       <TaskListDisplay
         title="Task List"

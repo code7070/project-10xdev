@@ -4,6 +4,20 @@ import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import AddTask from "./add-task";
 import { KeyedMutator } from "swr";
+import Link from "next/link";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
+import { deleteProject } from "@/services/useProjectServices";
+import { useState } from "react";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface HeadDetailProps extends Partial<ProjectDetail> {
   isLoading: boolean;
@@ -15,7 +29,21 @@ export default function ProjectHeadDetail({
   mutate,
   ...item
 }: HeadDetailProps) {
-  const { color, name, status, due_date, description } = item;
+  const router = useRouter();
+
+  const { color, name, status, due_date, description, id, deleted_at } = item;
+  const [loading, setLoading] = useState(false);
+
+  async function doDeleteProject() {
+    setLoading(true);
+    if (id) await deleteProject(id);
+    mutate();
+    setLoading(false);
+    toast.success("Project berhasil dihapus");
+    router.replace("/project");
+    // console.log("deleting id: ", id);
+    // if (onDelete && id) onDelete(id);
+  }
 
   const dueDate = due_date ? format(new Date(due_date), "do MMM yyy") : "-";
 
@@ -49,13 +77,43 @@ export default function ProjectHeadDetail({
             <Loader className="size-8 animate-spin" />
           ) : (
             <div className="flex gap-2 w-full">
-              <Button variant="destructive" size="lg">
-                <Trash />
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="destructive"
+                    size="lg"
+                    disabled={!!deleted_at}
+                  >
+                    <Trash />
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogTitle>
+                    Are you sure you want to delete this project?
+                  </DialogTitle>
+                  <DialogDescription>
+                    This action cannot be undone.
+                  </DialogDescription>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button
+                        variant="destructive"
+                        onClick={doDeleteProject}
+                        disabled={!!deleted_at || loading}
+                      >
+                        {isLoading && <Loader className="animate-spin" />}
+                        Delete
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+              <Button size="lg" disabled={!!deleted_at} asChild={!deleted_at}>
+                <Link href={`/project/${item.id}/edit`}>
+                  <Edit />
+                </Link>
               </Button>
-              <Button size="lg">
-                <Edit />
-              </Button>
-              <AddTask item={item} mutate={mutate} />
+              <AddTask item={item} mutate={mutate} disabled={!!deleted_at} />
             </div>
           )}
         </div>

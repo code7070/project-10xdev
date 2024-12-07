@@ -1,15 +1,14 @@
-import { PostgrestError } from "@supabase/supabase-js";
+import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { IUser, User } from "../../interfaces/entities";
 import { addDays } from "date-fns";
 import { v4 as uuid } from "uuid";
-import supabase from "../supabase";
 
 export class UserRepo implements IUser {
-  private supabase;
   private tableName = "USER";
+  private supabase: SupabaseClient;
 
-  constructor() {
-    this.supabase = supabase();
+  constructor(supabase: SupabaseClient) {
+    this.supabase = supabase;
   }
 
   async getByToken(token: string): Promise<User | PostgrestError> {

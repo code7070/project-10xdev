@@ -25,10 +25,11 @@ import { Textarea } from "../ui/textarea";
 import { format } from "date-fns";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   createProject,
   generateProjectByAI,
+  updateProject,
 } from "@/services/useProjectServices";
 import { motion, Variants } from "framer-motion";
 import style from "@/styles/task-display.module.scss";
@@ -41,8 +42,12 @@ import { useRouter } from "next/navigation";
 
 export default function FormProject({
   defaultValues,
+  isEdit = false,
+  onSuccess,
 }: {
   defaultValues?: Partial<ProjectDetail>;
+  isEdit?: boolean;
+  onSuccess?: () => void;
 }) {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<"name" | "full">("name");
@@ -100,17 +105,24 @@ export default function FormProject({
     }
 
     setLoading(true);
-    const resProject = await createProject(project);
-    if (tasks.length > 0) {
-      /* eslint-disable-next-line */
-      const resTasks = await Promise.all(
-        tasks.map(async (i) => await createTask(i)),
-      );
-    }
-    setLoading(false);
-    if (resProject.status === 200) {
-      toast.success("Project berhasil dibuat");
-      router.replace("/project");
+    const api = isEdit ? updateProject : createProject;
+    const payload = isEdit ? { ...project, id: defaultValues?.id } : project;
+    const resProject = await api(payload);
+
+    if (isEdit && resProject.status >= 200) {
+      if (onSuccess) onSuccess();
+    } else {
+      if (tasks.length > 0) {
+        /* eslint-disable-next-line */
+        const resTasks = await Promise.all(
+          tasks.map(async (i) => await createTask(i)),
+        );
+      }
+      setLoading(false);
+      if (resProject.status === 200) {
+        toast.success("Project berhasil dibuat");
+        router.replace("/project");
+      }
     }
   }
 
@@ -129,6 +141,17 @@ export default function FormProject({
     setMode("full");
     setLoading(false);
   }
+
+  useEffect(() => {
+    if (defaultValues && defaultValues.id) {
+      form.setValue("name", defaultValues.name!);
+      form.setValue("description", defaultValues.description!);
+      form.setValue("due_date", defaultValues.due_date!);
+      form.setValue("color", defaultValues.color!);
+
+      setMode("full");
+    }
+  }, [defaultValues, form]);
 
   const varWrapper: Variants = {
     hidden: { opacity: 0 },
@@ -153,7 +176,7 @@ export default function FormProject({
   const color = form.watch("color");
   const tasks = form.watch("tasks");
 
-  const hasName = name.length > 0;
+  const hasName = name?.length > 0;
 
   return (
     <Form {...form}>
@@ -267,75 +290,77 @@ export default function FormProject({
               </motion.div>
             </div>
             <Separator />
-            <div className="space-y-4">
-              <FormLabel className="font-semibold uppercase">
-                Tasks List
-              </FormLabel>
-              {tasks?.map((i, n) => (
-                <motion.div
-                  variants={varTask}
-                  key={n}
-                  className={`${style.taskItem} -mx-2`}
-                >
-                  <div className="flex items-start gap-2.5 flex-1">
-                    <div className="w-full">
-                      <div className={style.name}>
-                        <FormField
-                          control={form.control}
-                          name={`tasks.${n}.name`}
-                          render={({ field }) => (
-                            <FormItem>
-                              <FormLabel>Task Name</FormLabel>
-                              <Input placeholder="Task Name" {...field} />
-                            </FormItem>
-                          )}
-                        />
-                      </div>
-                      <div className={`${style.infoWrapper} mt-5 !gap-5`}>
-                        <div className="flex flex-col gap-1">
-                          <FormLabel>Due Date</FormLabel>
+            {(tasks?.length || 0) > 0 && (
+              <div className="space-y-4">
+                <FormLabel className="font-semibold uppercase">
+                  Tasks List
+                </FormLabel>
+                {tasks?.map((i, n) => (
+                  <motion.div
+                    variants={varTask}
+                    key={n}
+                    className={`${style.taskItem} -mx-2`}
+                  >
+                    <div className="flex items-start gap-2.5 flex-1">
+                      <div className="w-full">
+                        <div className={style.name}>
                           <FormField
                             control={form.control}
-                            name={`tasks.${n}.due_date`}
+                            name={`tasks.${n}.name`}
                             render={({ field }) => (
-                              <Popover>
-                                <PopoverTrigger asChild>
-                                  <Button variant="outline" size="sm">
-                                    {format(i?.due_date || "", "do MMM yyy")}{" "}
-                                    <CalendarIcon className="ml-4" />
-                                  </Button>
-                                </PopoverTrigger>
-                                <PopoverContent>
-                                  <Calendar
-                                    mode="single"
-                                    selected={new Date(field.value || "")}
-                                    onSelect={(date) =>
-                                      field.onChange(date?.toISOString())
-                                    }
-                                  />
-                                </PopoverContent>
-                              </Popover>
+                              <FormItem>
+                                <FormLabel>Task Name</FormLabel>
+                                <Input placeholder="Task Name" {...field} />
+                              </FormItem>
                             )}
                           />
                         </div>
-                        <div className="flex flex-col gap-1">
-                          <FormLabel>Assignee</FormLabel>
-                          <FormField
-                            control={form.control}
-                            name={`tasks.${n}.employee_id`}
-                            render={({ field }) => (
-                              <PopupSelectEmployee
-                                onSelect={(user) => field.onChange(user.id)}
-                              />
-                            )}
-                          />
+                        <div className={`${style.infoWrapper} mt-5 !gap-5`}>
+                          <div className="flex flex-col gap-1">
+                            <FormLabel>Due Date</FormLabel>
+                            <FormField
+                              control={form.control}
+                              name={`tasks.${n}.due_date`}
+                              render={({ field }) => (
+                                <Popover>
+                                  <PopoverTrigger asChild>
+                                    <Button variant="outline" size="sm">
+                                      {format(i?.due_date || "", "do MMM yyy")}{" "}
+                                      <CalendarIcon className="ml-4" />
+                                    </Button>
+                                  </PopoverTrigger>
+                                  <PopoverContent>
+                                    <Calendar
+                                      mode="single"
+                                      selected={new Date(field.value || "")}
+                                      onSelect={(date) =>
+                                        field.onChange(date?.toISOString())
+                                      }
+                                    />
+                                  </PopoverContent>
+                                </Popover>
+                              )}
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <FormLabel>Assignee</FormLabel>
+                            <FormField
+                              control={form.control}
+                              name={`tasks.${n}.employee_id`}
+                              render={({ field }) => (
+                                <PopupSelectEmployee
+                                  onSelect={(user) => field.onChange(user.id)}
+                                />
+                              )}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                  </motion.div>
+                ))}
+              </div>
+            )}
           </motion.div>
         )}
         <div className="flex justify-end mt-8">
@@ -344,7 +369,7 @@ export default function FormProject({
               type="submit"
               className="flex gap-2"
               size="lg"
-              disabled={loading}
+              disabled={!!defaultValues?.deleted_at || loading}
             >
               {loading ? <Loader className="animate-spin" /> : <CheckCheck />}{" "}
               SAVE PROJECT
@@ -355,14 +380,14 @@ export default function FormProject({
                 size="lg"
                 variant="outline"
                 onClick={() => setMode("full")}
-                disabled={!hasName}
+                disabled={!!defaultValues?.deleted_at || !hasName}
               >
                 <Plus className="mr-2" /> Buat Manual
               </Button>
               <Button
                 size="lg"
                 variant="outline"
-                disabled={loading || !hasName}
+                disabled={!!defaultValues?.deleted_at || loading || !hasName}
                 onClick={generateAI}
               >
                 {loading ? (

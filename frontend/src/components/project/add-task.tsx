@@ -34,8 +34,10 @@ import SelectEmployee from "./select-employee";
 export default function AddTask({
   item,
   mutate,
+  disabled,
 }: {
   item: Partial<ProjectDetail>;
+  disabled: boolean;
   mutate: KeyedMutator<false | ApiResponse<ProjectDetail>>;
 }) {
   const [loading, setLoading] = useState(false);
@@ -87,7 +89,7 @@ export default function AddTask({
       open={open}
     >
       <DialogTrigger asChild>
-        <Button variant="appWhite" size="lg">
+        <Button variant="appWhite" size="lg" disabled={disabled}>
           <Plus /> Add New Task
         </Button>
       </DialogTrigger>

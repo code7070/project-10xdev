@@ -4,6 +4,7 @@ import { userRoutes } from "./presentation/user.routes";
 import { employeeRoutes } from "./presentation/employee.routes";
 import { projectRoutes } from "./presentation/project.routes";
 import { taskRoutes } from "./presentation/task.routes";
+import { randomUserRoutes } from "./presentation/random-user.route";
 
 export const PORT = process.env.PORT || 3000;
 
@@ -34,6 +35,7 @@ const app = new Elysia()
   .use(employeeRoutes)
   .use(projectRoutes)
   .use(taskRoutes)
+  .use(randomUserRoutes)
   // Activation
   .listen({ port: PORT, idleTimeout: 120 });
 

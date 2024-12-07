@@ -67,4 +67,29 @@ export class FetchService {
       })
     ).json();
   }
+
+  async DELETE(
+    endpoint: string,
+    body?: { [key: string]: string | Blob },
+    isFormData: boolean = false,
+  ) {
+    // payload declare
+    let bodyPayload: string | FormData = JSON.stringify(body);
+
+    // payload rewrite
+    if (isFormData && body && Object.keys(body).length > 0) {
+      const formdata = new FormData();
+      Object.keys(body).map((i) => formdata.append(i, body[i]));
+      bodyPayload = formdata;
+    }
+
+    return await (
+      await fetch(this.apiEndpoint(endpoint), {
+        body: bodyPayload,
+        method: "DELETE",
+        headers: this.headers,
+        credentials: "include",
+      })
+    ).json();
+  }
 }

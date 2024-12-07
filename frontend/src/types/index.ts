@@ -76,3 +76,20 @@ export interface ApiResponse<T> {
   status: number;
   data: T;
 }
+
+export interface RandomUser {
+  name: {
+    title: string;
+    first: string;
+    last: string;
+  };
+  email: string;
+  login: {
+    uuid: string;
+    [key: string]: string | number;
+  };
+  picture: {
+    large: string;
+    [key: string]: string;
+  };
+}

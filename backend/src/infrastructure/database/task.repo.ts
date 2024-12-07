@@ -1,11 +1,15 @@
+import { SupabaseClient } from "@supabase/supabase-js";
 import { ITask, Task } from "../../interfaces/entities";
-import supabase from "../supabase";
 import { addDays, format } from "date-fns";
 
 export class TaskRepo implements ITask {
   private tableName = "task";
   private tableUser = "USER";
-  private supabase = supabase();
+  private supabase: SupabaseClient;
+
+  constructor(supabase: SupabaseClient) {
+    this.supabase = supabase;
+  }
 
   async getDetail(id: string) {
     const select =
@@ -29,7 +33,7 @@ export class TaskRepo implements ITask {
       .select("id,name,status,due_date,employee:employee_id(name,id)")
       .eq("project_id", projectId);
     if (api.error) return api.error;
-    return api.data.map((i) => ({ ...i, employee: i.employee?.[0] } as Task));
+    return api.data.map((i) => ({ ...i, employee: i.employee?.[0] }) as Task);
   }
 
   async getByDoneDate(date: string, idOnly?: boolean) {

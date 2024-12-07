@@ -1,5 +1,6 @@
 import type { Config } from "tailwindcss";
 import plugin from "tailwindcss/plugin";
+import tailwindAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
@@ -90,8 +91,15 @@ export default {
           "-webkit-text-fill-color": "transparent",
           backgroundImage: gradient,
         },
+        ".page-wrapper": {
+          // px-8 mt-6 flex flex-col gap-6
+          padding: "32px 24px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "24px",
+        },
       });
     }),
-    require("tailwindcss-animate"),
+    tailwindAnimate,
   ],
 } satisfies Config;

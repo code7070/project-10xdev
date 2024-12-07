@@ -12,9 +12,7 @@ RUN bun install --frozen-lockfile \
 
 COPY . .
 RUN bun run build
-
 RUN bun install --production --frozen-lockfile
-
 
 # ---
 FROM base AS final

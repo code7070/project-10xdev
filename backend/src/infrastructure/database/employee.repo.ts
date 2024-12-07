@@ -1,21 +1,22 @@
+import { SupabaseClient } from "@supabase/supabase-js";
 import { Employee, IEmployee, RandomUser } from "../../interfaces/entities";
-import supabase from "../supabase";
+import { RandomUserService } from "../../application/random-user.service";
 
 export class EmployeeRepo implements IEmployee {
   private tableName = "employee";
-  private supabase;
+  private supabase: SupabaseClient;
+  private randomUserService: RandomUserService;
 
-  constructor() {
-    this.supabase = supabase();
+  constructor(supabase: SupabaseClient, randomUserService: RandomUserService) {
+    this.supabase = supabase;
+    this.randomUserService = randomUserService;
   }
 
   async addEmployee(amount?: number) {
     const endpoint = `https://randomuser.me/api?results=${
       amount || 1
     }&inc=login,name,picture,email`;
-    const users = (await (await fetch(endpoint)).json()) as {
-      results: RandomUser[];
-    };
+    const users = await this.randomUserService.get(1);
     const payload: Employee[] = users.results?.map((i) => ({
       id: i.login.uuid,
       name: `${i.name.first} ${i.name.last}`,

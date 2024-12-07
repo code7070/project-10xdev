@@ -50,8 +50,9 @@ export interface IProject {
   update: (
     id: string,
     data: Partial<Project>,
+    token: string,
   ) => Promise<Partial<Project[]> | PostgrestError>;
-  delete: (id: string) => Promise<void | string>;
+  delete: (id: string, date: string, token: string) => Promise<void | string>;
   getActive: () => Promise<Partial<Task[]> | PostgrestError>;
 }
 

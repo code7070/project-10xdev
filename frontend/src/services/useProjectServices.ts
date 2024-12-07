@@ -87,3 +87,16 @@ export async function createProject(project: Partial<Project>) {
   const res = (await fetch.POST("/project", project)) as IResponse<string>;
   return res;
 }
+
+export async function updateProject(project: Partial<Project>) {
+  const res = (await fetch.POST(
+    `/project/${project.id}`,
+    project,
+  )) as IResponse<string>;
+  return res;
+}
+
+export async function deleteProject(id: string) {
+  const res = (await fetch.POST(`/project/delete/${id}`)) as IResponse<string>;
+  return res;
+}

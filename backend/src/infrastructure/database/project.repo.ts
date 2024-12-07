@@ -1,12 +1,15 @@
+import { SupabaseClient } from "@supabase/supabase-js";
 import { IProject, Project } from "../../interfaces/entities";
-import supabase from "../supabase";
 
 export class ProjectRepo implements IProject {
   private tableName = "project";
   private tableUser = "USER";
   private tableTask = "task";
+  private supabase: SupabaseClient;
 
-  private supabase = supabase();
+  constructor(supabase: SupabaseClient) {
+    this.supabase = supabase;
+  }
 
   // async get(id?: string) {
   //   const api = this.supabase
@@ -29,6 +32,7 @@ export class ProjectRepo implements IProject {
       const api = await this.supabase
         .from(this.tableName)
         .select("id")
+        .is("deleted_at", null)
         .eq("created_by", user.data.id)
         .order("created_at", { ascending: false });
       if (api.error) return api.error;
@@ -46,7 +50,7 @@ export class ProjectRepo implements IProject {
     if (user.data) {
       const project = await this.supabase
         .from(this.tableName)
-        .select("id,name,description,due_date,status,color")
+        .select("id,name,description,due_date,status,color,deleted_at")
         .eq("id", id)
         .eq("created_by", user.data.id)
         .single();
@@ -89,19 +93,32 @@ export class ProjectRepo implements IProject {
     return user.error;
   }
 
-  async update(id: string, data: Partial<Project>) {
-    const res = await this.supabase
-      .from(this.tableName)
-      .update(data)
-      .eq("id", id)
+  async update(id: string, data: Partial<Project>, token?: string) {
+    const user = await this.supabase
+      .from(this.tableUser)
       .select("id")
+      .eq("token", token)
       .single();
-    if (res.error) return res.error;
-    return res.data.id;
+    if (user && user.data) {
+      const payload = {
+        ...data,
+        updated_at: new Date().toISOString(),
+        updated_by: user.data.id,
+      };
+      const res = await this.supabase
+        .from(this.tableName)
+        .update(payload)
+        .eq("id", id)
+        .select("id")
+        .single();
+      if (res.error) return res.error;
+      return res.data.id;
+    }
+    return user.error;
   }
 
-  async delete(id: string) {
-    return await this.update(id, { deleted_at: new Date().toISOString() });
+  async delete(id: string, date: string, token: string) {
+    return await this.update(id, { deleted_at: date }, token);
   }
 
   async getActive() {

@@ -26,6 +26,32 @@ export const projectRoutes = new Elysia({ prefix: "/project" })
         due_date: t.String(),
         updated_at: t.Optional(t.String()),
         updated_by: t.Optional(t.String()),
+        color: t.Optional(t.String()),
+        status: t.Optional(
+          t.Union([
+            t.Literal("ACTIVE"),
+            t.Literal("DONE"),
+            t.Literal("CANCELED"),
+            t.Literal("PENDING"),
+          ]),
+        ),
+      }),
+    },
+  )
+  .post(
+    "/:projectId",
+    async ({ body, cookie: { "pms-token": token }, params: { projectId } }) => {
+      return await projectService.update(projectId, body, token.value!);
+    },
+    {
+      body: t.Object({
+        id: t.Optional(t.String()),
+        name: t.String(),
+        description: t.String(),
+        due_date: t.String(),
+        updated_at: t.Optional(t.String()),
+        updated_by: t.Optional(t.String()),
+        color: t.Optional(t.String()),
         status: t.Optional(
           t.Union([
             t.Literal("ACTIVE"),
@@ -46,4 +72,14 @@ export const projectRoutes = new Elysia({ prefix: "/project" })
       return await aiService.project().description(query.projectName);
     },
     { query: t.Object({ projectName: t.String() }) },
+  )
+  .post(
+    "/delete/:projectId",
+    async ({ params: { projectId }, cookie: { "pms-token": token } }) => {
+      return await projectService.delete(
+        projectId,
+        new Date().toISOString(),
+        token.value!,
+      );
+    },
   );
