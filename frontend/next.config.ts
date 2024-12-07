@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
   sassOptions: {
     silenceDeprecations: ["legacy-js-api"],
   },
-  // output: "standalone",
+  output: "standalone",
 };
 
 export default nextConfig;
