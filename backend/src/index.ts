@@ -18,6 +18,10 @@ const app = new Elysia()
       credentials: true,
     }),
   )
+  .get("/check-creds", () => ({
+    "api-id": process.env.API_ID,
+    "api-key": process.env.API_KEY,
+  }))
   .guard({
     beforeHandle({ headers }) {
       const headers_apiId = headers?.["api-id"] || "";
@@ -36,6 +40,7 @@ const app = new Elysia()
   .use(projectRoutes)
   .use(taskRoutes)
   .use(randomUserRoutes)
+
   // Activation
   .listen({ port: PORT, idleTimeout: 120 });
 
