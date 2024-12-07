@@ -11,9 +11,11 @@ RUN bun install --frozen-lockfile \
     && bun next telemetry disable
 
 COPY . . 
-RUN bun run build
 
 RUN bun install --production --frozen-lockfile
+
+RUN bun run build
+
 
 
 # ---
