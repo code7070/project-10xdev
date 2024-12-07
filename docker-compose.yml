@@ -2,6 +2,7 @@ version: "3.8"
 services:
   frontendapp:
     container_name: fe
+    image: jojocontainer/proeject-10x:frontend-app
     build:
       context: ./frontend
       dockerfile: Dockerfile
@@ -11,6 +12,7 @@ services:
       - NODE_ENV=production
   backendapp:
     container_name: be
+    image: jojocontainer/proeject-10x:backend-app
     build:
       context: ./backend
       dockerfile: Dockerfile
