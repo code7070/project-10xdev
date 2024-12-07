@@ -15,7 +15,7 @@ const app = new Elysia()
       origin: ["http://localhost:3000"],
       methods: ["GET", "POST", "PUT", "DELETE"],
       credentials: true,
-    })
+    }),
   )
   .guard({
     beforeHandle({ headers }) {
@@ -38,5 +38,5 @@ const app = new Elysia()
   .listen({ port: PORT, idleTimeout: 120 });
 
 console.log(
-  `👻 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+  `👻 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`,
 );

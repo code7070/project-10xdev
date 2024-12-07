@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "dev-frontend": "cd frontend && bun dev",
+    "dev-backend": "cd backend && bun dev",
+    "dev": "bun run dev-frontend & bun run dev-backend"
+  }
+}
