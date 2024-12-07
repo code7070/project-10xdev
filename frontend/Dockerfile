@@ -1,4 +1,4 @@
-FROM oven/bun:1.1.38 AS base
+FROM oven/bun AS base
 
 WORKDIR /app
 
@@ -17,7 +17,6 @@ RUN bun install --production --frozen-lockfile
 RUN bun run build
 
 
-
 # ---
 FROM base AS final
 
@@ -30,10 +29,6 @@ COPY --from=builder --chown=nextjs:nextjs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nextjs /app/public ./public
 COPY --from=builder --chown=nextjs:nextjs /app/.next/static ./.next/static
 COPY --from=builder --chown=nextjs:nextjs /app/node_modules ./node_modules/
-
-RUN chown nextjs:bun .
-
-USER nextjs
 
 EXPOSE 3000
 CMD ["bun", "server.js"]
