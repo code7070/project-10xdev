@@ -33,8 +33,8 @@ jobs:
           NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
           API_ID=${{ secrets.API_ID }}
           API_KEY=${{ secrets.API_KEY }}
-          NEXT_PUBLIC_API_ID=${{ secrets.NEXT_PUBLIC_API_ID }}
-          NEXT_PUBLIC_API_KEY=${{ secrets.NEXT_PUBLIC_API_KEY }}
+          NEXT_PUBLIC_API_ID=${{ secrets.API_ID }}
+          NEXT_PUBLIC_API_KEY=${{ secrets.API_KEY }}
           NEXT_TELEMETRY_DISABLED=1
           EOF
 
