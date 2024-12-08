@@ -13,4 +13,5 @@ export const randomUserRoutes = new Elysia({ prefix: "/random-user" })
         amount: t.Optional(t.Number()),
       }),
     },
-  );
+  )
+  .get("/test", () => "ok");

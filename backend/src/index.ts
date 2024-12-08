@@ -1,27 +1,14 @@
 import { Elysia, error } from "elysia";
-import { cors } from "@elysiajs/cors";
-import { userRoutes } from "./presentation/user.routes";
-import { employeeRoutes } from "./presentation/employee.routes";
-import { projectRoutes } from "./presentation/project.routes";
-import { taskRoutes } from "./presentation/task.routes";
-import { randomUserRoutes } from "./presentation/random-user.route";
+import { appRoutes } from "./routes";
+import { corsConfig } from "./tools";
 
 export const PORT = process.env.PORT || 3000;
 
 const app = new Elysia()
   // Hooks
   // Routes
-  .use(
-    cors({
-      origin: ["http://localhost:3000", "http://103.127.139.85:3000"],
-      methods: ["GET", "POST", "PUT", "DELETE"],
-      credentials: true,
-    }),
-  )
-  .get("/check-creds", () => ({
-    "api-id": process.env.API_ID,
-    "api-key": process.env.API_KEY,
-  }))
+  .use(corsConfig)
+  .get("/test", () => "ok")
   .guard({
     beforeHandle({ headers }) {
       const headers_apiId = headers?.["api-id"] || "";
@@ -34,15 +21,12 @@ const app = new Elysia()
     },
   })
   // add check for request headers api-key api-id
-  .get("/test", () => "ok")
-  .use(userRoutes)
-  .use(employeeRoutes)
-  .use(projectRoutes)
-  .use(taskRoutes)
-  .use(randomUserRoutes)
+  .use(appRoutes)
 
   // Activation
   .listen({ port: PORT, idleTimeout: 120 });
+
+export const apiApp = app;
 
 console.log(
   `👻 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`,
