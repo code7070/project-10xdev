@@ -6,6 +6,7 @@ import { format } from "date-fns";
 import { motion } from "framer-motion";
 import { Loader, Search } from "lucide-react";
 import Link from "next/link";
+import { Button } from "../ui/button";
 
 export default function DashboardTaskProgress({
   isLogin,
@@ -28,6 +29,17 @@ export default function DashboardTaskProgress({
           <div className="font-medium text-sm">
             How many task done by due date
           </div>
+          <Button
+            onClick={() => {
+              console.log(
+                "ENV: ",
+                process.env.NEXT_PUBLIC_API_URL,
+                process.env.NEXT_PUBLIC_API_KEY,
+              );
+            }}
+          >
+            Explore with AI
+          </Button>
         </div>
         {isLoading ? (
           <Loader className="size-10 animate-spin" />
